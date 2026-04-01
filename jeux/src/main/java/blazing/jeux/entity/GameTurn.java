@@ -1,7 +1,6 @@
-package com.cartes.entity;
+package blazing.jeux.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 public class GameTurn {

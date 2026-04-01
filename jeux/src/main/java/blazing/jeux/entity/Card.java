@@ -1,4 +1,4 @@
-package com.cartes.entity;
+package blazing.jeux.entity;
 
 import jakarta.persistence.*;
 
