@@ -12,7 +12,7 @@ public class Card {
     private String color;   // ROUGE, BLEU, VERT, JAUNE, NOIR
     private String value;   // 0-9, PASSER, INVERSE, PLUS2, PLUS4, JOKER
 
-    private boolean isDiscard; // true si c'est la carte visible sur la défausse
+    private boolean discard; // true si c'est la carte visible sur la défausse
 
     @ManyToOne
     @JoinColumn(name = "deck_id")
@@ -49,11 +49,11 @@ public class Card {
     }
 
     public boolean isDiscard() { 
-        return isDiscard; 
+        return discard; 
     }
 
     public void setDiscard(boolean discard) { 
-        this.isDiscard = discard; 
+        this.discard = discard; 
     }
 
     public Deck getDeck() { 
