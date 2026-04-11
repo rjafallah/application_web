@@ -21,6 +21,8 @@ public class GamePlayer {
     @OneToMany(mappedBy = "holder")
     private Collection<Card> hand;
 
+    private int handSize;
+
     public GamePlayer() {}
 
     public Long getId() { 
@@ -53,5 +55,13 @@ public class GamePlayer {
 
     public void setHand(Collection<Card> hand) { 
         this.hand = hand; 
+    }
+
+    public int getHandSize() { 
+        return handSize; 
+    }
+
+    public void setHandSize(int handSize) { 
+        this.handSize = handSize; 
     }
 }

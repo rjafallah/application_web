@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Blazing 8s - Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        button { margin: 5px; padding: 8px 16px; cursor: pointer; }
+        input { margin: 5px; padding: 6px; width: 200px; }
+        #result { margin-top: 20px; padding: 15px; background: #f0f0f0; 
+                  border-radius: 8px; white-space: pre-wrap; }
+        h2 { border-bottom: 2px solid #333; padding-bottom: 5px; }
+        .section { margin-bottom: 30px; }
+    </style>
+</head>
+<body>
+
+<h1>Blazing 8s — Test API</h1>
+<div id="result">Les résultats s'affichent ici...</div>
+
+<!-- ========== AUTH ========== -->
+<div class="section">
+    <h2>Auth</h2>
+
+    <div>
+        <input id="reg-username" placeholder="Username" />
+        <input id="reg-password" placeholder="Password" type="password" />
+        <button onclick="register()">Register</button>
+    </div>
+
+    <div>
+        <input id="login-username" placeholder="Username" />
+        <input id="login-password" placeholder="Password" type="password" />
+        <button onclick="login()">Login</button>
+    </div>
+</div>
+
+<!-- ========== LOBBY ========== -->
+<div class="section">
+    <h2>Lobby</h2>
+    <button onclick="getWaitingGames()">Voir les parties en attente</button>
+    <br>
+    <input id="create-playerId" placeholder="Player ID" />
+    <button onclick="createGame()">Créer une partie</button>
+    <br>
+    <input id="join-gameId" placeholder="Game ID" />
+    <input id="join-playerId" placeholder="Player ID" />
+    <button onclick="joinGame()">Rejoindre</button>
+</div>
+
+<!-- ========== GAME ========== -->
+<div class="section">
+    <h2>Game</h2>
+    <input id="start-gameId" placeholder="Game ID" />
+    <button onclick="startGame()">Démarrer la partie</button>
+    <br><br>
+    <input id="state-gameId" placeholder="Game ID" />
+    <input id="state-playerId" placeholder="Player ID" />
+    <button onclick="getGameState()">Voir l'état de la partie</button>
+    <br><br>
+    <input id="play-gameId" placeholder="Game ID" />
+    <input id="play-playerId" placeholder="Player ID" />
+    <input id="play-cardId" placeholder="Card ID" />
+    <input id="play-color" placeholder="Couleur (si 8)" />
+    <button onclick="playCard()">Jouer une carte</button>
+    <br><br>
+    <input id="draw-gameId" placeholder="Game ID" />
+    <input id="draw-playerId" placeholder="Player ID" />
+    <button onclick="drawCard()">Piocher</button>
+</div>
+
+<!-- ========== RANKING ========== -->
+<div class="section">
+    <h2>Ranking</h2>
+    <button onclick="getRanking()">Voir le classement</button>
+</div>
+
+<script>
+    const BASE = "http://localhost:8080/api";
+
+    function show(data) {
+        document.getElementById("result").textContent = JSON.stringify(data, null, 2);
+    }
+
+    // AUTH
+    async function register() {
+        const res = await fetch(`${BASE}/auth/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: document.getElementById("reg-username").value,
+                password: document.getElementById("reg-password").value
+            })
+        });
+        show(await res.json());
+    }
+
+    async function login() {
+        const res = await fetch(`${BASE}/auth/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                username: document.getElementById("login-username").value,
+                password: document.getElementById("login-password").value
+            })
+        });
+        show(await res.json());
+    }
+
+    // LOBBY
+    async function getWaitingGames() {
+        const res = await fetch(`${BASE}/lobby`);
+        show(await res.json());
+    }
+
+    async function createGame() {
+        const playerId = document.getElementById("create-playerId").value;
+        const res = await fetch(`${BASE}/lobby/create?playerId=${playerId}`, {
+            method: "POST"
+        });
+        show(await res.json());
+    }
+
+    async function joinGame() {
+        const gameId = document.getElementById("join-gameId").value;
+        const playerId = document.getElementById("join-playerId").value;
+        const res = await fetch(`${BASE}/lobby/join/${gameId}?playerId=${playerId}`, {
+            method: "POST"
+        });
+        show(await res.json());
+    }
+
+    // GAME
+    async function startGame() {
+        const gameId = document.getElementById("start-gameId").value;
+        const res = await fetch(`${BASE}/game/${gameId}/start`, {
+            method: "POST"
+        });
+        show(await res.text());
+    }
+
+    async function getGameState() {
+        const gameId = document.getElementById("state-gameId").value;
+        const playerId = document.getElementById("state-playerId").value;
+        const res = await fetch(`${BASE}/game/${gameId}?playerId=${playerId}`);
+        show(await res.json());
+    }
+
+    async function playCard() {
+        const gameId = document.getElementById("play-gameId").value;
+        const playerId = document.getElementById("play-playerId").value;
+        const cardId = document.getElementById("play-cardId").value;
+        const color = document.getElementById("play-color").value;
+        let url = `${BASE}/game/${gameId}/play?playerId=${playerId}&cardId=${cardId}`;
+        if (color) url += `&chosenColor=${color}`;
+        const res = await fetch(url, { method: "POST" });
+        show(await res.text());
+    }
+
+    async function drawCard() {
+        const gameId = document.getElementById("draw-gameId").value;
+        const playerId = document.getElementById("draw-playerId").value;
+        const res = await fetch(`${BASE}/game/${gameId}/draw?playerId=${playerId}`, {
+            method: "POST"
+        });
+        show(await res.json());
+    }
+
+    // RANKING
+    async function getRanking() {
+        const res = await fetch(`${BASE}/ranking`);
+        show(await res.json());
+    }
+</script>
+
+</body>
+</html>
