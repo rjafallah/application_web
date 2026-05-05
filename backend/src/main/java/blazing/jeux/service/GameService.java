@@ -4,6 +4,7 @@ import blazing.jeux.entity.*;
 import blazing.jeux.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import blazing.jeux.dto.GameStateDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,7 +25,24 @@ public class GameService {
     private GameTurnRepo gameTurnRepo;
 
     @Autowired
+    private PlayerRepo playerRepo;
+
+    @Autowired
+    private DeckRepo deckRepo;
+
+    @Autowired
     private DeckService deckService;
+
+    public GameStateDTO getGameState(Long gameId, Long playerId) {
+        Game game = gameRepo.findById(gameId).orElseThrow();
+        Player player = playerRepo.findById(playerId).orElseThrow();
+        GamePlayer currentGP = gamePlayerRepo.findByGameAndPlayer(game, player).orElseThrow();
+        List<Card> hand = cardRepo.findByHolder(currentGP);
+        Deck deck = deckRepo.findByGame(game).orElseThrow();
+        Card topCard = cardRepo.findDefausse(deck).orElse(null);
+        List<GamePlayer> allPlayers = gamePlayerRepo.findByGame(game);
+        return new GameStateDTO(game, hand, topCard, allPlayers, currentGP);
+    }
 
     // créer une nouvelle partie
     public Game createGame(Player player) {

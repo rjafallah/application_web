@@ -1,0 +1,99 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@300;400;600;700;900&family=Rajdhani:wght@400;600;700&display=swap');
+
+:root {
+    --bg: #0a0a0f;
+    --bg2: #12121a;
+    --bg3: #1a1a26;
+    --border: #2a2a3d;
+    --accent: #e63946;
+    --accent2: #f4a261;
+    --text: #e8e8f0;
+    --text2: #8888aa;
+    --rouge: #e63946;
+    --bleu: #4361ee;
+    --vert: #2dc653;
+    --jaune: #f4a261;
+    --none: #8888aa;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+}
+
+.app { min-height: 100vh; }
+
+/* BOUTONS */
+.btn {
+    font-family: 'Exo 2', sans-serif;
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #ff4757;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(230, 57, 70, 0.4);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text2);
+    border: 1px solid var(--border);
+}
+
+.btn-secondary:hover {
+    border-color: var(--text2);
+    color: var(--text);
+}
+
+.btn-success {
+    background: var(--vert);
+    color: white;
+}
+
+.btn-success:hover {
+    background: #39d966;
+    transform: translateY(-2px);
+}
+
+/* INPUTS */
+.input {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem;
+    padding: 12px 16px;
+    width: 100%;
+    transition: border-color 0.2s;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+/* CARD COULEURS */
+.color-ROUGE { background: var(--rouge); }
+.color-BLEU  { background: var(--bleu); }
+.color-VERT  { background: var(--vert); }
+.color-JAUNE { background: var(--jaune); }
+.color-NONE  { background: var(--none); }

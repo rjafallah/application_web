@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/lobby")
+@CrossOrigin(origins = "*")
 public class LobbyController {
 
     @Autowired

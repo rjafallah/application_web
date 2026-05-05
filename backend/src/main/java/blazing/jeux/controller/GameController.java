@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/game")
+@CrossOrigin(origins = "*")
 public class GameController {
 
     @Autowired

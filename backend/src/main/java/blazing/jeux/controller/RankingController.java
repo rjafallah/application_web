@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/ranking")
+@CrossOrigin(origins = "*")
 public class RankingController {
 
     @Autowired
