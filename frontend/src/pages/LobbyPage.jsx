@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getWaitingGames, createGame, joinGame } from "../services/api";
 
-export default function LobbyPage({ player, onJoinGame, onRanking }) {
+export default function LobbyPage({ player, onJoinGame, onRanking, onLogout }) {
     const [games, setGames] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -45,6 +45,9 @@ export default function LobbyPage({ player, onJoinGame, onRanking }) {
                     <span style={styles.playerName}>👤 {player.username}</span>
                     <button className="btn btn-secondary" onClick={onRanking}>
                         Classement
+                    </button>
+                    <button className="btn btn-secondary" onClick={onLogout}>
+                        Déconnexion
                     </button>
                 </div>
             </div>

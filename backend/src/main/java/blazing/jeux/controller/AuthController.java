@@ -7,7 +7,7 @@ import blazing.jeux.entity.Player;
 import blazing.jeux.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -27,5 +27,10 @@ public class AuthController {
     public PlayerDTO login(@RequestBody LoginRequest request) {
         Player player = authService.login(request.getUsername(), request.getPassword());
         return new PlayerDTO(player);
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<String> handleRuntimeException(RuntimeException e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }

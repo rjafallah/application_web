@@ -9,21 +9,28 @@ export default function LoginPage({ onLogin }) {
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async () => {
-        if (!username || !password) return;
+        if (!username.trim() || !password.trim()) {
+            setError("Veuillez remplir le nom d'utilisateur et le mot de passe");
+            return;
+        }
+
         setLoading(true);
         setError("");
+
         try {
             const fn = mode === "login" ? login : register;
-            const player = await fn(username, password);
-            if (player.id) {
+            const player = await fn(username.trim(), password);
+
+            if (player?.id) {
                 onLogin(player);
             } else {
-                setError(player);
+                setError("Réponse invalide du serveur");
             }
-        } catch {
-            setError("Erreur de connexion au serveur");
+        } catch (e) {
+            setError(e.message || "Erreur de connexion au serveur");
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
     };
 
     return (

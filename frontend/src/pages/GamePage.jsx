@@ -5,7 +5,7 @@ import CardComponent from "../components/Card";
 import ColorPicker from "../components/ColorPicker";
 import Chat from "../components/Chat";
 
-export default function GamePage({ gameId, player, onLeave }) {
+export default function GamePage({ gameId, player, onLeave, onLogout }) {
     const [gameState, setGameState] = useState(null);
     const [started, setStarted] = useState(false);
     const [showColorPicker, setShowColorPicker] = useState(false);
@@ -97,9 +97,14 @@ export default function GamePage({ gameId, player, onLeave }) {
                         </span>
                     )}
                 </div>
-                <button className="btn btn-secondary" onClick={onLeave}>
-                    Quitter
-                </button>
+                <div style={styles.headerActions}>
+                    <button className="btn btn-secondary" onClick={onLeave}>
+                        Quitter
+                    </button>
+                    <button className="btn btn-secondary" onClick={onLogout}>
+                        Déconnexion
+                    </button>
+                </div>
             </div>
 
             <div style={styles.main}>
@@ -108,8 +113,21 @@ export default function GamePage({ gameId, player, onLeave }) {
 
                     {/* FIN DE PARTIE */}
                     {gameState?.status === "FINISHED" && (
-                        <div style={styles.winBanner}>
-                            🎉 Partie terminée !
+                        <div style={{
+                            ...styles.winBanner,
+                            background: gameState.winner === player.username
+                                ? "rgba(45,198,83,0.15)"
+                                : "rgba(230,57,70,0.15)",
+                            border: gameState.winner === player.username
+                                ? "1px solid #2dc653"
+                                : "1px solid #e63946",
+                            color: gameState.winner === player.username
+                                ? "#2dc653"
+                                : "#e63946",
+                        }}>
+                            {gameState.winner === player.username
+                                ? "🎉 Vous avez gagné !"
+                                : `😞 ${gameState.winner} a gagné. Vous avez perdu !`}
                         </div>
                     )}
 
@@ -242,6 +260,7 @@ const styles = {
     },
     logo: { fontSize: "1.4rem", fontFamily: "'Exo 2', sans-serif", fontWeight: 900 },
     headerCenter: { display: "flex", flexDirection: "column", alignItems: "center", gap: 6 },
+    headerActions: { display: "flex", alignItems: "center", gap: 12 },
     gameIdLabel: { color: "#8888aa", fontSize: "0.8rem", letterSpacing: "0.1em" },
     turnBadge: {
         padding: "4px 16px",

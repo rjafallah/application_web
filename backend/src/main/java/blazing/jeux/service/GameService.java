@@ -33,6 +33,9 @@ public class GameService {
     @Autowired
     private DeckService deckService;
 
+    @Autowired
+    private RankingService rankingService;
+
     public GameStateDTO getGameState(Long gameId, Long playerId) {
         Game game = gameRepo.findById(gameId).orElseThrow();
         Player player = playerRepo.findById(playerId).orElseThrow();
@@ -41,6 +44,12 @@ public class GameService {
         Deck deck = deckRepo.findByGame(game).orElseThrow();
         Card topCard = cardRepo.findDefausse(deck).orElse(null);
         List<GamePlayer> allPlayers = gamePlayerRepo.findByGame(game);
+
+        // recalculer le vrai nombre de cartes de chaque joueur
+        for (GamePlayer gp : allPlayers) {
+            gp.setHandSize(cardRepo.countByHolder(gp));
+        }
+
         return new GameStateDTO(game, hand, topCard, allPlayers, currentGP);
     }
 
@@ -94,6 +103,12 @@ public class GameService {
         Deck deck = deckService.createDeck(game);
         deckService.distributeCards(deck, players);
 
+        // initialiser le nombre de cartes de chaque joueur après la distribution
+        for (GamePlayer gp : players) {
+            gp.setHandSize(cardRepo.countByHolder(gp));
+            gamePlayerRepo.save(gp);
+        }
+
         game.setStatus("IN_PROGRESS");
         game.setCurrentPlayer(players.get(0).getPlayer());
 
@@ -113,7 +128,7 @@ public class GameService {
 
         // GIDDY_UP et WRONG_WAY : même couleur que la couleur active
         if (played.getValue().equals("GIDDY_UP") || played.getValue().equals("WRONG_WAY")) {
-            return played.getColor().equals(currentColor);
+            return played.getColor().equals(currentColor) || played.getValue().equals(topCard.getValue());
         }
 
         // carte normale : même couleur ou même valeur
@@ -207,6 +222,16 @@ public class GameService {
         GamePlayer winnerCheck = gamePlayerRepo.findByGameAndPlayer(game, player).orElseThrow(() -> new RuntimeException("Joueur introuvable"));
         if (cardRepo.findByHolder(winnerCheck).isEmpty()) {
             game.setStatus("FINISHED");
+            game.setWinner(player.getUsername());
+
+            // mettre à jour le classement
+            rankingService.recordWin(player);
+            List<GamePlayer> allPlayers = gamePlayerRepo.findByGame(game);
+            for (GamePlayer gp : allPlayers) {
+                if (!gp.getPlayer().getId().equals(player.getId())) {
+                    rankingService.recordLoss(gp.getPlayer());
+                }
+            }
         }
 
         gameRepo.save(game);
@@ -234,8 +259,25 @@ public class GameService {
     // piocher une carte
     public Card drawCard(Long gameId, Player player) {
         Game game = gameRepo.findById(gameId).orElseThrow(() -> new RuntimeException("Partie introuvable"));
+
+        // vérifier que c'est le tour de ce joueur
+        if (!game.getCurrentPlayer().getId().equals(player.getId())) {
+            throw new RuntimeException("Ce n'est pas votre tour");
+        }
+
         GamePlayer gp = gamePlayerRepo.findByGameAndPlayer(game, player).orElseThrow(() -> new RuntimeException("Joueur introuvable dans la partie"));
-        return deckService.drawCard(game.getDeck(), gp);
+
+        // piocher une seule carte
+        Card card = deckService.drawCard(game.getDeck(), gp);
+
+        // passer au joueur suivant
+        List<GamePlayer> players = gamePlayerRepo.findByGame(game);
+        int currentIndex = getCurrentPlayerIndex(players, player);
+        int nextIndex = getNextIndex(game, players, currentIndex);
+        game.setCurrentPlayer(players.get(nextIndex).getPlayer());
+        gameRepo.save(game);
+
+        return card;
     }
 
     // récupérer les cartes en main d'un joueur

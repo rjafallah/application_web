@@ -17,6 +17,7 @@ public class GameStateDTO {
     private List<CardDTO> hand;
     private CardDTO topCard;
     private List<OpponentDTO> opponents;
+    private String winner;
 
     public GameStateDTO() {}
 
@@ -45,6 +46,7 @@ public class GameStateDTO {
             }
         }
         this.opponents = opponents;
+        this.winner = game.getWinner();
     }
 
     public Long getGameId() { 
@@ -109,6 +111,14 @@ public class GameStateDTO {
 
     public void setOpponents(List<OpponentDTO> opponents) { 
         this.opponents = opponents; 
+    }
+
+    public String getWinner() { 
+        return winner; 
+    }
+
+    public void setWinner(String winner) { 
+        this.winner = winner; 
     }
 
     public static class OpponentDTO {

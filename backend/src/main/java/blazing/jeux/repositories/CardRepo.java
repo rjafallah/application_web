@@ -23,4 +23,7 @@ public interface CardRepo extends JpaRepository<Card, Long> {
 
     // cartes en main d'un joueur
     List<Card> findByHolder(GamePlayer holder);
+
+    // compter le nombre de cartes dans la main d'un joueur
+    int countByHolder(GamePlayer holder);
 }

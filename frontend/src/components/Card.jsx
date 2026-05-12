@@ -71,6 +71,27 @@ export default function Card({ card, onClick, disabled }) {
             }}>
                 {label}
             </span>
+
+            {/* Petit logo pour signaler que la carte 8 est spéciale */}
+            {is8 && (
+                <span style={{
+                    position: "absolute",
+                    top: 4,
+                    right: 6,
+                    width: 18,
+                    height: 18,
+                    borderRadius: "50%",
+                    background: "rgba(255,255,255,0.22)",
+                    border: "1px solid rgba(255,255,255,0.45)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "0.75rem",
+                    lineHeight: 1,
+                }}>
+                    ✦
+                </span>
+            )}
         </div>
     );
 }

@@ -14,6 +14,8 @@ public class Game {
     private String direction;   // CLOCKWISE, COUNTERCLOCKWISE
     private String currentColor; // couleur active sur la défausse
 
+    private String winner;
+
     @ManyToOne
     @JoinColumn(name = "current_player_id")
     private Player currentPlayer;
@@ -62,6 +64,14 @@ public class Game {
 
     public void setCurrentColor(String currentColor) { 
         this.currentColor = currentColor; 
+    }
+
+    public String getWinner() { 
+        return winner;
+    }
+
+    public void setWinner(String winner) { 
+        this.winner = winner; 
     }
 
     public Player getCurrentPlayer() { 

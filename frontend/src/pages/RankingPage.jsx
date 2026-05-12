@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { getRanking } from "../services/api";
 
-export default function RankingPage({ onBack }) {
+export default function RankingPage({ onBack, onLogout}) {
     const [ranking, setRanking] = useState([]);
 
     useEffect(() => {
@@ -18,7 +18,9 @@ export default function RankingPage({ onBack }) {
                     <span style={{ color: "#e8e8f0" }}>BLAZING</span>
                     <span style={{ color: "#e63946" }}>8s</span>
                 </div>
-                <div style={{ width: 100 }} />
+                <button className="btn btn-secondary" onClick={onLogout}>
+                    Déconnexion
+                </button>
             </div>
 
             <div style={styles.content}>

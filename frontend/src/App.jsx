@@ -39,6 +39,7 @@ export default function App() {
                     player={player}
                     onJoinGame={goToGame}
                     onRanking={goToRanking}
+                    onLogout={logout}
                 />
             )}
             {page === "game" && (
@@ -46,10 +47,13 @@ export default function App() {
                     gameId={gameId}
                     player={player}
                     onLeave={goToLobbyFromGame}
+                    onLogout={logout}
                 />
             )}
             {page === "ranking" && (
-                <RankingPage onBack={() => setPage("lobby")} />
+                <RankingPage onBack={() => setPage("lobby")} 
+                onLogout={logout}
+                />
             )}
         </div>
     );

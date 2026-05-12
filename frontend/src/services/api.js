@@ -6,14 +6,20 @@ export const register = (username, password) =>
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
-    }).then(r => r.json());
+    }).then(r => {
+        if (!r.ok) return r.text().then(msg => { throw new Error(msg); });
+        return r.json();
+    });
 
 export const login = (username, password) =>
     fetch(`${BASE}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password })
-    }).then(r => r.json());
+    }).then(r => {
+        if (!r.ok) return r.text().then(msg => { throw new Error(msg); });
+        return r.json();
+    });
 
 // LOBBY
 export const getWaitingGames = () =>
